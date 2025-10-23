@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Suggestion, GitBookPage, AnalysisResult, SummaryResult } from './types';
-import { proofreadText, summarizeText } from './services/geminiService';
+import { proofreadText, summarizeText, initializeGemini } from './services/geminiService';
 import { getPageContent } from './services/gitbookService';
 import { getGoogleDocContent } from './services/googleDocService';
 
-import { DEMO_MARKDOWN_TEXT } from './constants';
-import { BookOpenIcon, CheckCircleIcon, ExclamationTriangleIcon, PencilSquareIcon, CloudArrowUpIcon, QuestionMarkCircleIcon, DocumentTextIcon, ListBulletIcon } from './components/icons';
+import { DEMO_MARKDOWN_TEXT, DEFAULT_API_KEY } from './constants';
+import { KeyIcon, BookOpenIcon, CheckCircleIcon, ExclamationTriangleIcon, PencilSquareIcon, CloudArrowUpIcon, QuestionMarkCircleIcon, DocumentTextIcon, ListBulletIcon } from './components/icons';
 import Loader from './components/Loader';
 import ProofreadingResults from './components/ProofreadingResults';
 import TextInputView from './components/DemoView';
@@ -16,11 +16,13 @@ import HelpModal from './components/HelpModal';
 import BatchResultsSummary from './components/BatchResultsSummary';
 import SummarizeView from './components/SummarizeView';
 import SummaryResultsView from './components/SummaryResultsView';
+import ApiKeyInput from './components/ApiKeyInput';
 
 type AppMode = 'text' | 'file' | 'gitbook' | 'googledoc' | 'summarize';
 type PageStatus = 'errors' | 'no_issues';
 
 const App: React.FC = () => {
+    const [apiKey, setApiKey] = useState<string | null>(null);
     const [mode, setMode] = useState<AppMode>('text');
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
     
@@ -39,6 +41,43 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [apiError, setApiError] = useState<string | null>(null);
+
+    useEffect(() => {
+        let keyToUse = localStorage.getItem('geminiApiKey');
+
+        if (!keyToUse) {
+            keyToUse = DEFAULT_API_KEY;
+            localStorage.setItem('geminiApiKey', keyToUse);
+        }
+
+        if (keyToUse) {
+            try {
+                initializeGemini(keyToUse);
+                setApiKey(keyToUse);
+            } catch (error) {
+                 console.error("Failed to initialize with API key:", error);
+                 localStorage.removeItem('geminiApiKey');
+                 setApiKey(null);
+            }
+        }
+    }, []);
+
+    const handleSetKey = (key: string) => {
+        try {
+            initializeGemini(key);
+            localStorage.setItem('geminiApiKey', key);
+            setApiKey(key);
+            setApiError(null);
+        } catch (error) {
+            console.error("Failed to initialize with provided API key:", error);
+            setApiError("The provided API key appears to be invalid.");
+        }
+    };
+
+    const handleClearKey = () => {
+        localStorage.removeItem('geminiApiKey');
+        setApiKey(null);
+    };
 
     // Reset state when switching modes
     useEffect(() => {
@@ -173,7 +212,6 @@ const App: React.FC = () => {
                 }
             }
 
-            // Sort results to match original order
             const itemOrder = items.map(p => ('name' in p ? p.name : p.id));
             results.sort((a, b) => itemOrder.indexOf(a.page.id) - itemOrder.indexOf(b.page.id));
 
@@ -367,12 +405,21 @@ const App: React.FC = () => {
         return null;
     };
 
+    if (!apiKey) {
+        return <ApiKeyInput onSetKey={handleSetKey} apiError={apiError} />;
+    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-start p-4">
             <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
             <header className="text-center my-6 md:my-8 w-full max-w-7xl">
                 <div className="relative flex justify-center items-center">
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2">
+                        <button onClick={handleClearKey} className="text-gray-400 hover:text-white transition-colors flex items-center space-x-1.5 px-3 py-1.5 rounded-lg hover:bg-gray-800/60" aria-label="Change API Key">
+                            <KeyIcon className="w-5 h-5" />
+                            <span className="text-sm font-medium hidden sm:inline">Change Key</span>
+                        </button>
+                    </div>
                     <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">
                         Doc QA Assistant
                     </h1>

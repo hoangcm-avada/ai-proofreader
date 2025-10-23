@@ -64,6 +64,14 @@ const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="p-6 sm:p-8 space-y-8">
                     <div>
+                        <h3 className="text-lg font-semibold text-white mb-4">Getting Started</h3>
+                        <div className="space-y-6">
+                            <HelpItem icon={<KeyIcon />} title="API Key Information">
+                                This app includes a pre-configured sample API key to let you start testing immediately. For best results and to avoid rate limits, we highly recommend switching to your own personal Google Gemini API key. You can do this at any time by clicking the "Change Key" button in the header.
+                            </HelpItem>
+                        </div>
+                    </div>
+                    <div>
                         <h3 className="text-lg font-semibold text-white mb-4">Core Features</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                              <HelpItem icon={<PencilSquareIcon />} title="Proofread Text">

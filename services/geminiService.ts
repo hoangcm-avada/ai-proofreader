@@ -1,13 +1,21 @@
-
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { ProofreadError } from '../types';
 
-if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable is not set");
-}
-  
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let ai: GoogleGenAI | null = null;
+
+export const initializeGemini = (apiKey: string) => {
+    if (!apiKey) {
+        throw new Error("API key is required to initialize Gemini.");
+    }
+    ai = new GoogleGenAI({ apiKey });
+};
+
+const getAi = (): GoogleGenAI => {
+    if (!ai) {
+        throw new Error("Gemini AI not initialized. Please call initializeGemini(apiKey) first.");
+    }
+    return ai;
+};
 
 const proofreadSchema = {
   type: Type.ARRAY,
@@ -81,7 +89,8 @@ export const proofreadText = async (
   `;
   
   try {
-    const response = await ai.models.generateContent({
+    const gemini = getAi();
+    const response = await gemini.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -93,11 +102,9 @@ export const proofreadText = async (
     });
 
     const jsonText = response.text.trim();
-    // Handle cases where the model might still wrap the JSON in markdown
     const cleanedJsonText = jsonText.replace(/^```json\s*|```$/g, '');
     const result = JSON.parse(cleanedJsonText);
 
-    // Basic validation to ensure it's an array of the expected shape
     if (Array.isArray(result) && (result.length === 0 || result.every(item => 'original' in item && 'correction' in item && 'explanation' in item))) {
         return result as ProofreadError[];
     } else {
@@ -124,11 +131,12 @@ export const generateSampleText = async (): Promise<string> => {
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const gemini = getAi();
+    const response = await gemini.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        temperature: 0.8, // A bit higher temp for more creative/varied text
+        temperature: 0.8,
       },
     });
     return response.text;
@@ -148,7 +156,8 @@ export const generateSampleTextForSummary = async (): Promise<string> => {
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const gemini = getAi();
+    const response = await gemini.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -181,7 +190,8 @@ export const summarizeText = async (documentContent: string): Promise<string> =>
     `;
 
     try {
-        const response = await ai.models.generateContent({
+        const gemini = getAi();
+        const response = await gemini.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
             config: {
