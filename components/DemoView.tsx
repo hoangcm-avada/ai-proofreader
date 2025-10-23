@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
-import { SparklesIcon } from './icons';
-import { generateSampleText } from '../services/geminiService';
+import { SparklesIcon } from './icons.tsx';
+import { generateSampleText } from '../services/geminiService.ts';
 
 interface TextInputViewProps {
     markdownText: string;

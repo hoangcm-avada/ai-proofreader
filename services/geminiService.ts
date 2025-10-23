@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { ProofreadError } from '../types';
+import { ProofreadError } from '../types.ts';
 
 let ai: GoogleGenAI | null = null;
 

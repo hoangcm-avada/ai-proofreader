@@ -1,7 +1,5 @@
-
-
 import React, { useState, useCallback } from 'react';
-import { CloudArrowUpIcon, SparklesIcon, DocumentTextIcon, XIcon } from './icons';
+import { CloudArrowUpIcon, SparklesIcon, DocumentTextIcon, XIcon } from './icons.tsx';
 
 interface FileUploadViewProps {
     onAnalyzeFiles: (files: File[], dictionary: string, styleGuide: string) => void;

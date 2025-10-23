@@ -1,4 +1,4 @@
-import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types';
+import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types.ts';
 
 const GITBOOK_API_BASE = 'https://api.gitbook.com';
 

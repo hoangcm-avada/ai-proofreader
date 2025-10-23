@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { SparklesIcon, KeyIcon, FolderOpenIcon, DocumentTextIcon, CheckCircleIcon, InformationCircleIcon, ArrowRightIcon } from './icons';
-import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types';
-import { connectAndFetchContent, listPages } from '../services/gitbookService';
+import { SparklesIcon, KeyIcon, FolderOpenIcon, DocumentTextIcon, CheckCircleIcon, InformationCircleIcon, ArrowRightIcon } from './icons.tsx';
+import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types.ts';
+import { connectAndFetchContent, listPages } from '../services/gitbookService.ts';
 
 interface GitBookViewProps {
     onAnalyzePages: (apiKey: string, pages: GitBookPage[], dictionary: string, styleGuide: string) => void;
@@ -277,8 +277,10 @@ const GitBookView: React.FC<GitBookViewProps> = ({ onAnalyzePages, pageStatuses,
                                                                 checked={selectedPageIds.has(page.id)} onChange={() => handleSelectionChange(page.id, 'page')} />
                                                             <DocumentTextIcon className="w-4 h-4 text-gray-400" />
                                                             <span className="text-sm flex-grow">{page.title}</span>
-                                                            {status === 'errors' && <InformationCircleIcon className="w-4 h-4 text-purple-400 flex-shrink-0" title="Suggestions found in last scan"/>}
-                                                            {status === 'no_issues' && <CheckCircleIcon className="w-4 h-4 text-green-400 flex-shrink-0" title="No issues found in last scan"/>}
+                                                            {/* FIX: Replaced title prop with a span wrapper for tooltip, as the component's typings do not accept a 'title' prop. */}
+                                                            {status === 'errors' && <span title="Suggestions found in last scan"><InformationCircleIcon className="w-4 h-4 text-purple-400 flex-shrink-0" /></span>}
+                                                            {/* FIX: Replaced title prop with a span wrapper for tooltip, as the component's typings do not accept a 'title' prop. */}
+                                                            {status === 'no_issues' && <span title="No issues found in last scan"><CheckCircleIcon className="w-4 h-4 text-green-400 flex-shrink-0" /></span>}
                                                         </div>
                                                     })}
                                                 </div>}

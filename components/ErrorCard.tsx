@@ -1,6 +1,6 @@
 import React from 'react';
-import { Suggestion } from '../types';
-import { CheckIcon, XIcon } from './icons';
+import { Suggestion } from '../types.ts';
+import { CheckIcon, XIcon } from './icons.tsx';
 
 interface ErrorCardProps {
     suggestion: Suggestion;

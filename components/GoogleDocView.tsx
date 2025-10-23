@@ -1,7 +1,5 @@
-
-
 import React, { useState } from 'react';
-import { SparklesIcon, DocumentTextIcon } from './icons';
+import { SparklesIcon, DocumentTextIcon } from './icons.tsx';
 
 interface GoogleDocViewProps {
     onAnalyze: (url: string, dictionary: string, styleGuide: string) => void;
