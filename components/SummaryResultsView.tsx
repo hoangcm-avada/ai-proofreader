@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SummaryResult } from '../types.ts';
-import { ArrowLeftIcon, ClipboardIcon, CheckIcon } from './icons.tsx';
-import { ExportDropdown } from './ExportDropdown.tsx';
+import { SummaryResult } from '../types';
+import { ArrowLeftIcon, ClipboardIcon, CheckIcon } from './icons';
+import { ExportDropdown } from './ExportDropdown';
 
 interface SummaryResultsViewProps {
     result: SummaryResult;

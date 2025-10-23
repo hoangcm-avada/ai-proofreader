@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { SparklesIcon, KeyIcon, FolderOpenIcon, DocumentTextIcon, CheckCircleIcon, InformationCircleIcon, ArrowRightIcon } from './icons.tsx';
-import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types.ts';
-import { connectAndFetchContent, listPages } from '../services/gitbookService.ts';
+import { SparklesIcon, KeyIcon, FolderOpenIcon, DocumentTextIcon, CheckCircleIcon, InformationCircleIcon, ArrowRightIcon } from './icons';
+import { GitBookSpace, GitBookPage, GitBookOrganization } from '../types';
+import { connectAndFetchContent, listPages } from '../services/gitbookService';
 
 interface GitBookViewProps {
     onAnalyzePages: (apiKey: string, pages: GitBookPage[], dictionary: string, styleGuide: string) => void;

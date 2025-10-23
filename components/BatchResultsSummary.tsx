@@ -1,6 +1,6 @@
 import React from 'react';
-import { AnalysisResult } from '../types.ts';
-import { CheckCircleIcon, SparklesIcon } from './icons.tsx';
+import { AnalysisResult } from '../types';
+import { CheckCircleIcon, SparklesIcon } from './icons';
 
 interface BatchResultsSummaryProps {
     results: AnalysisResult[];

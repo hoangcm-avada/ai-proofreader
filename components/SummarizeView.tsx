@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SparklesIcon, CloudArrowUpIcon, DocumentTextIcon, XIcon } from './icons.tsx';
-import { generateSampleTextForSummary } from '../services/geminiService.ts';
-import { DEMO_MARKDOWN_TEXT } from '../constants.ts';
+import { SparklesIcon, CloudArrowUpIcon, DocumentTextIcon, XIcon } from './icons';
+import { generateSampleTextForSummary } from '../services/geminiService';
+import { DEMO_MARKDOWN_TEXT } from '../constants';
 
 interface SummarizeViewProps {
     onSummarize: (params: { text?: string; file?: File }) => void;

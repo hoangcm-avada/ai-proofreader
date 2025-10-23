@@ -12,7 +12,7 @@ import {
     BeakerIcon,
     QuestionMarkCircleIcon,
     KeyIcon
-} from './icons.tsx';
+} from './icons';
 
 interface HelpModalProps {
     isOpen: boolean;

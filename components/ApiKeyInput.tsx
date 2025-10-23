@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyIcon } from './icons.tsx';
+import { KeyIcon } from './icons';
 
 interface ApiKeyInputProps {
     onSetKey: (key: string) => void;

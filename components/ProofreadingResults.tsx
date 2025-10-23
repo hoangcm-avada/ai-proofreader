@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { Suggestion } from '../types.ts';
-import ErrorCard from './ErrorCard.tsx';
-import { ArrowPathIcon, CheckIcon, ClipboardIcon, CloudArrowUpIcon, ArrowLeftIcon } from './icons.tsx';
-import { ExportDropdown } from './ExportDropdown.tsx';
+import { Suggestion } from '../types';
+import ErrorCard from './ErrorCard';
+import { ArrowPathIcon, CheckIcon, ClipboardIcon, CloudArrowUpIcon, ArrowLeftIcon } from './icons';
+import { ExportDropdown } from './ExportDropdown';
 
 interface ProofreadingResultsProps {
     suggestions: Suggestion[];

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowDownTrayIcon } from './icons.tsx';
+import { ArrowDownTrayIcon } from './icons';
 
 export const ExportDropdown: React.FC<{ onExport: (format: 'txt' | 'md' | 'pdf') => void }> = ({ onExport }) => {
     const [isOpen, setIsOpen] = useState(false);
