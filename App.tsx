@@ -4,7 +4,7 @@ import { proofreadText, summarizeText, initializeGemini } from './services/gemin
 import { getPageContent } from './services/gitbookService';
 import { getGoogleDocContent } from './services/googleDocService';
 
-import { DEMO_MARKDOWN_TEXT, DEFAULT_API_KEY } from './constants';
+import { DEMO_MARKDOWN_TEXT } from './constants';
 import { KeyIcon, BookOpenIcon, CheckCircleIcon, ExclamationTriangleIcon, PencilSquareIcon, CloudArrowUpIcon, QuestionMarkCircleIcon, DocumentTextIcon, ListBulletIcon } from './components/icons';
 import Loader from './components/Loader';
 import ProofreadingResults from './components/ProofreadingResults';
@@ -43,19 +43,15 @@ const App: React.FC = () => {
     const [apiError, setApiError] = useState<string | null>(null);
 
     useEffect(() => {
-        let keyToUse = localStorage.getItem('geminiApiKey');
+        const keyFromStorage = localStorage.getItem('geminiApiKey');
 
-        if (!keyToUse) {
-            keyToUse = DEFAULT_API_KEY;
-            localStorage.setItem('geminiApiKey', keyToUse);
-        }
-
-        if (keyToUse) {
+        if (keyFromStorage) {
             try {
-                initializeGemini(keyToUse);
-                setApiKey(keyToUse);
+                initializeGemini(keyFromStorage);
+                setApiKey(keyFromStorage);
             } catch (error) {
-                 console.error("Failed to initialize with API key:", error);
+                 console.error("Initialization with stored API key failed:", error);
+                 // If the stored key is bad, clear it and force re-entry.
                  localStorage.removeItem('geminiApiKey');
                  setApiKey(null);
             }

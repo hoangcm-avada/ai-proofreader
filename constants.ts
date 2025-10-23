@@ -1,7 +1,5 @@
 
 
-export const DEFAULT_API_KEY = "AIzaSyCcF9RtoOsfAOfn3Jc5hGtVbAtW_iFJrgk";
-
 export const DEMO_MARKDOWN_TEXT = `Announcing AI Product Description Pro for you're Shopify Store!
 
 Are you tired of spending hours writing compelling product descriptions? We're thrilled to introduce our newest feature: AI Product Description Pro! This powerful tool are designed to help Shopify marchants like you create high-converting product descriptions in seconds. Its a game-changer for you're e-commerce business.
