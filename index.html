@@ -28,12 +28,10 @@
 </script>
   <!-- Add Babel for in-browser JSX/TS transpilation -->
   <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="font-sans text-gray-300">
     <div id="root"></div>
-    <!-- Change script type to text/babel and specify it's a module for Babel -->
-    <script type="text/babel" data-type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <!-- Instruct Babel to use React & TypeScript presets and treat the script as a module -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
+  </body>
 </html>
