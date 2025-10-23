@@ -1,0 +1,5 @@
+{
+  "name": "AI Proofreader",
+  "description": "An expert technical writing assistant that analyzes Markdown text for grammatical errors, spelling mistakes, and awkward phrasing, suggesting corrections with explanations using the Gemini API.",
+  "requestFramePermissions": []
+}
