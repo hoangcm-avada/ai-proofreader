@@ -66,8 +66,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                     <div>
                         <h3 className="text-lg font-semibold text-white mb-4">Getting Started</h3>
                         <div className="space-y-6">
+                            {/* FIX: Updated API key instructions to reflect environment variable usage, removing mentions of in-app key changes. */}
                             <HelpItem icon={<KeyIcon />} title="API Key Information">
-                                This app includes a pre-configured sample API key to let you start testing immediately. For best results and to avoid rate limits, we highly recommend switching to your own personal Google Gemini API key. You can do this at any time by clicking the "Change Key" button in the header.
+                                This application is configured to use a Google Gemini API key provided through an environment variable. No manual setup of the API key is required within the app. Ensure the <code>GEMINI_API_KEY</code> is set in your environment for the application to function correctly.
                             </HelpItem>
                         </div>
                     </div>

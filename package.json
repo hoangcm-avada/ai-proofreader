@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://hoangcm-avada.github.io/ai-proofreader/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,7 +11,7 @@
     "deploy": "npm run build && npx gh-pages -d dist"
   },
   "dependencies": {
-    "@google/genai": "^1.25.0",
+    "@google/genai": "^1.26.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
