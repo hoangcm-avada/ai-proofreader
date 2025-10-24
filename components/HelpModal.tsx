@@ -47,7 +47,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
         >
             <div 
-                className="bg-[#1C1827] border border-gray-700/50 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+                className="bg-[#1C1827] border border-gray-700/50 rounded-xl shadow-2xl w-full md:max-w-3xl max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="p-6 sm:p-8 space-y-2 text-center border-b border-gray-700/50 relative">

@@ -1,21 +1,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ProofreadError } from '../types';
 
-let ai: GoogleGenAI | null = null;
-
-export const initializeGemini = (apiKey: string) => {
-    if (!apiKey) {
-        throw new Error("API key is required to initialize Gemini.");
-    }
-    ai = new GoogleGenAI({ apiKey });
-};
-
-const getAi = (): GoogleGenAI => {
-    if (!ai) {
-        throw new Error("Gemini AI not initialized. Please call initializeGemini(apiKey) first.");
-    }
-    return ai;
-};
+// FIX: Initialize the GoogleGenAI client at the module level using the environment variable.
+// This adheres to the coding guidelines and removes the need for manual initialization.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const proofreadSchema = {
   type: Type.ARRAY,
@@ -89,8 +77,8 @@ export const proofreadText = async (
   `;
   
   try {
-    const gemini = getAi();
-    const response = await gemini.models.generateContent({
+    // FIX: Use the module-level 'ai' instance directly.
+    const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -131,8 +119,8 @@ export const generateSampleText = async (): Promise<string> => {
   `;
 
   try {
-    const gemini = getAi();
-    const response = await gemini.models.generateContent({
+    // FIX: Use the module-level 'ai' instance directly.
+    const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -156,8 +144,8 @@ export const generateSampleTextForSummary = async (): Promise<string> => {
   `;
 
   try {
-    const gemini = getAi();
-    const response = await gemini.models.generateContent({
+    // FIX: Use the module-level 'ai' instance directly.
+    const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -190,8 +178,8 @@ export const summarizeText = async (documentContent: string): Promise<string> =>
     `;
 
     try {
-        const gemini = getAi();
-        const response = await gemini.models.generateContent({
+        // FIX: Use the module-level 'ai' instance directly.
+        const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
             config: {

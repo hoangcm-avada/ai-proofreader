@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Suggestion, GitBookPage, AnalysisResult, SummaryResult } from './types';
-import { proofreadText, summarizeText, initializeGemini } from './services/geminiService';
+// FIX: Removed `initializeGemini` as it's no longer needed.
+import { proofreadText, summarizeText } from './services/geminiService';
 import { getPageContent } from './services/gitbookService';
 import { getGoogleDocContent } from './services/googleDocService';
 
 import { DEMO_MARKDOWN_TEXT } from './constants';
-import { KeyIcon, BookOpenIcon, CheckCircleIcon, ExclamationTriangleIcon, PencilSquareIcon, CloudArrowUpIcon, QuestionMarkCircleIcon, DocumentTextIcon, ListBulletIcon } from './components/icons';
+import { KeyIcon, BookOpenIcon, CheckCircleIcon, ExclamationTriangleIcon, PencilSquareIcon, CloudArrowUpIcon, QuestionMarkCircleIcon, DocumentTextIcon, ListBulletIcon, ChevronLeftIcon, ChevronRightIcon } from './components/icons';
 import Loader from './components/Loader';
 import ProofreadingResults from './components/ProofreadingResults';
 import TextInputView from './components/DemoView';
@@ -16,13 +17,13 @@ import HelpModal from './components/HelpModal';
 import BatchResultsSummary from './components/BatchResultsSummary';
 import SummarizeView from './components/SummarizeView';
 import SummaryResultsView from './components/SummaryResultsView';
-import ApiKeyInput from './components/ApiKeyInput';
+// FIX: Removed ApiKeyInput as it's no longer used.
 
 type AppMode = 'text' | 'file' | 'gitbook' | 'googledoc' | 'summarize';
 type PageStatus = 'errors' | 'no_issues';
 
 const App: React.FC = () => {
-    const [apiKey, setApiKey] = useState<string | null>(null);
+    // FIX: Removed apiKey state. The app now assumes the Gemini API is configured via environment variables.
     const [mode, setMode] = useState<AppMode>('text');
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
     
@@ -42,38 +43,13 @@ const App: React.FC = () => {
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [apiError, setApiError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const keyFromStorage = localStorage.getItem('geminiApiKey');
+    // State for tab navigation arrows
+    const tabsContainerRef = useRef<HTMLDivElement>(null);
+    const [showLeftArrow, setShowLeftArrow] = useState(false);
+    const [showRightArrow, setShowRightArrow] = useState(false);
 
-        if (keyFromStorage) {
-            try {
-                initializeGemini(keyFromStorage);
-                setApiKey(keyFromStorage);
-            } catch (error) {
-                 console.error("Initialization with stored API key failed:", error);
-                 // If the stored key is bad, clear it and force re-entry.
-                 localStorage.removeItem('geminiApiKey');
-                 setApiKey(null);
-            }
-        }
-    }, []);
-
-    const handleSetKey = (key: string) => {
-        try {
-            initializeGemini(key);
-            localStorage.setItem('geminiApiKey', key);
-            setApiKey(key);
-            setApiError(null);
-        } catch (error) {
-            console.error("Failed to initialize with provided API key:", error);
-            setApiError("The provided API key appears to be invalid.");
-        }
-    };
-
-    const handleClearKey = () => {
-        localStorage.removeItem('geminiApiKey');
-        setApiKey(null);
-    };
+    // FIX: Removed all API key handling logic (useEffect, handleSetKey, handleClearKey).
+    // The Gemini API is now expected to be configured globally.
 
     // Reset state when switching modes
     useEffect(() => {
@@ -337,6 +313,41 @@ const App: React.FC = () => {
         alert(`This would update the page with ID: ${viewingPageId} in GitBook.`);
     }, [viewingPageId]);
 
+    // Logic for tab scrolling arrows
+    const checkArrows = useCallback(() => {
+        const el = tabsContainerRef.current;
+        if (el) {
+            const isScrollable = el.scrollWidth > el.clientWidth;
+            setShowLeftArrow(isScrollable && el.scrollLeft > 0);
+            // Use a small tolerance for floating point inaccuracies
+            setShowRightArrow(isScrollable && el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
+        }
+    }, []);
+
+    useEffect(() => {
+        const el = tabsContainerRef.current;
+        if (el) {
+            // Check arrows on mount and on any changes that might affect the container
+            checkArrows();
+            el.addEventListener('scroll', checkArrows);
+            window.addEventListener('resize', checkArrows);
+
+            // Cleanup
+            return () => {
+                el.removeEventListener('scroll', checkArrows);
+                window.removeEventListener('resize', checkArrows);
+            };
+        }
+    }, [checkArrows]); // Re-check when main view renders
+
+    const handleTabScroll = (direction: 'left' | 'right') => {
+        const el = tabsContainerRef.current;
+        if (el) {
+            const scrollAmount = direction === 'left' ? -el.clientWidth * 0.75 : el.clientWidth * 0.75;
+            el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    };
+
     const renderContent = () => {
         if (isLoading) return <Loader message={loadingMessage} />;
         if (apiError) {
@@ -401,21 +412,13 @@ const App: React.FC = () => {
         return null;
     };
 
-    if (!apiKey) {
-        return <ApiKeyInput onSetKey={handleSetKey} apiError={apiError} />;
-    }
-
+    // FIX: The app no longer needs to wait for an API key.
     return (
-        <div className="min-h-screen flex flex-col items-center justify-start p-4">
+        <div className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
             <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
-            <header className="text-center my-6 md:my-8 w-full max-w-7xl">
+            <header className="text-center my-4 sm:my-8 w-full max-w-7xl">
                 <div className="relative flex justify-center items-center">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2">
-                        <button onClick={handleClearKey} className="text-gray-400 hover:text-white transition-colors flex items-center space-x-1.5 px-3 py-1.5 rounded-lg hover:bg-gray-800/60" aria-label="Change API Key">
-                            <KeyIcon className="w-5 h-5" />
-                            <span className="text-sm font-medium hidden sm:inline">Change Key</span>
-                        </button>
-                    </div>
+                    {/* FIX: Removed the "Change Key" button as it's no longer needed. */}
                     <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">
                         Doc QA Assistant
                     </h1>
@@ -424,34 +427,60 @@ const App: React.FC = () => {
                         <span className="text-sm font-medium hidden sm:inline">Help</span>
                     </button>
                 </div>
-                <p className="mt-3 max-w-2xl mx-auto text-base text-gray-400">
+                <p className="mt-3 max-w-2xl mx-auto text-base text-gray-400 px-2">
                     Your AI partner for pristine, professional, and polished technical documentation.
                 </p>
             </header>
 
             <main className="w-full max-w-7xl flex-grow">
-                 <div className="mb-6">
-                    <div className="flex justify-center border-b border-gray-700/50">
-                        <button onClick={() => setMode('text')} className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium transition-colors ${mode === 'text' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
-                           <PencilSquareIcon className="w-5 h-5"/>
-                           <span>Proofread Text</span>
-                        </button>
-                         <button onClick={() => setMode('file')} className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium transition-colors ${mode === 'file' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
-                           <CloudArrowUpIcon className="w-5 h-5"/>
-                           <span>Proofread Files</span>
-                        </button>
-                        <button onClick={() => setMode('googledoc')} className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium transition-colors ${mode === 'googledoc' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
-                            <DocumentTextIcon className="w-5 h-5" />
-                           <span>Proofread Google Doc</span>
-                        </button>
-                        <button onClick={() => setMode('gitbook')} className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium transition-colors ${mode === 'gitbook' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
-                            <BookOpenIcon className="w-5 h-5" />
-                           <span>Proofread GitBook</span>
-                        </button>
-                        <button onClick={() => setMode('summarize')} className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium transition-colors ${mode === 'summarize' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
-                            <ListBulletIcon className="w-5 h-5" />
-                           <span>Summarize Document</span>
-                        </button>
+                 <div className="mb-6 w-full">
+                    <div className="border-b border-gray-700/50">
+                       <div className="relative">
+                            {showLeftArrow && (
+                                <button
+                                    onClick={() => handleTabScroll('left')}
+                                    className="absolute left-0 top-0 bottom-0 z-10 flex items-center bg-gradient-to-r from-[#0D0B14] via-[#0D0B14] to-transparent pr-6 lg:hidden"
+                                    aria-label="Scroll left"
+                                >
+                                    <span className="p-1.5 bg-gray-800/80 rounded-full border border-gray-600 shadow-lg">
+                                        <ChevronLeftIcon className="w-4 h-4 text-white" />
+                                    </span>
+                                </button>
+                            )}
+                            <div ref={tabsContainerRef} className="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-px">
+                                <button onClick={() => setMode('text')} className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2.5 text-sm font-medium transition-colors ${mode === 'text' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
+                                <PencilSquareIcon className="w-5 h-5"/>
+                                <span className="whitespace-nowrap">Proofread Text</span>
+                                </button>
+                                <button onClick={() => setMode('file')} className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2.5 text-sm font-medium transition-colors ${mode === 'file' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
+                                <CloudArrowUpIcon className="w-5 h-5"/>
+                                <span className="whitespace-nowrap">Proofread Files</span>
+                                </button>
+                                <button onClick={() => setMode('googledoc')} className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2.5 text-sm font-medium transition-colors ${mode === 'googledoc' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
+                                    <DocumentTextIcon className="w-5 h-5" />
+                                <span className="whitespace-nowrap">Proofread Google Doc</span>
+                                </button>
+                                <button onClick={() => setMode('gitbook')} className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2.5 text-sm font-medium transition-colors ${mode === 'gitbook' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
+                                    <BookOpenIcon className="w-5 h-5" />
+                                <span className="whitespace-nowrap">Proofread GitBook</span>
+                                </button>
+                                <button onClick={() => setMode('summarize')} className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2.5 text-sm font-medium transition-colors ${mode === 'summarize' ? 'border-b-2 border-purple-500 text-white' : 'border-b-2 border-transparent text-gray-400 hover:text-white'}`}>
+                                    <ListBulletIcon className="w-5 h-5" />
+                                <span className="whitespace-nowrap">Summarize Document</span>
+                                </button>
+                            </div>
+                             {showRightArrow && (
+                                <button
+                                    onClick={() => handleTabScroll('right')}
+                                    className="absolute right-0 top-0 bottom-0 z-10 flex items-center bg-gradient-to-l from-[#0D0B14] via-[#0D0B14] to-transparent pl-6 lg:hidden"
+                                    aria-label="Scroll right"
+                                >
+                                    <span className="p-1.5 bg-gray-800/80 rounded-full border border-gray-600 shadow-lg">
+                                        <ChevronRightIcon className="w-4 h-4 text-white" />
+                                    </span>
+                                </button>
+                            )}
+                       </div>
                     </div>
                  </div>
 

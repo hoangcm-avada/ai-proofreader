@@ -163,7 +163,7 @@ const ProofreadingResults: React.FC<ProofreadingResultsProps> = ({ suggestions, 
     return (
         <div className="space-y-6">
             <div className="bg-[#1C1827] border border-gray-700/50 rounded-xl p-4 flex items-center justify-between flex-wrap gap-4 shadow-lg shadow-purple-900/10 transition-shadow duration-300 hover:shadow-[0_0_20px_theme(colors.purple.700)]">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                      {onBackToSummary && (
                         <button
                             onClick={onBackToSummary}
@@ -174,13 +174,13 @@ const ProofreadingResults: React.FC<ProofreadingResultsProps> = ({ suggestions, 
                         </button>
                      )}
                     <div>
-                        <h2 className="text-xl font-bold text-white">
+                        <h2 className="text-lg sm:text-xl font-bold text-white truncate max-w-[200px] sm:max-w-xs md:max-w-md" title={pageTitle}>
                             {onBackToSummary ? `Reviewing: ${pageTitle}` : 'Review Suggestions'}
                         </h2>
                         <p className="text-sm text-gray-400">{suggestions.length} suggestions found. {pendingCount} pending review.</p>
                     </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 flex-wrap gap-2 justify-end">
                      <ExportDropdown onExport={handleExport} />
                      {isGitBookMode && onPushToGitBook && (
                         <button
@@ -210,12 +210,12 @@ const ProofreadingResults: React.FC<ProofreadingResultsProps> = ({ suggestions, 
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-4 max-h-[100vh] overflow-y-auto pr-2">
+                <div className="space-y-4 max-h-[400px] sm:max-h-[500px] lg:max-h-[calc(100vh-240px)] overflow-y-auto pr-2 -mr-2">
                      {suggestions.map((suggestion) => (
                         <ErrorCard key={suggestion.id} suggestion={suggestion} onUpdateStatus={onUpdateSuggestion} />
                     ))}
                 </div>
-                <div className="h-[60vh] lg:h-auto">
+                <div className="h-[400px] sm:h-[500px] lg:h-auto min-h-[400px]">
                    <FinalTextView originalText={originalText} suggestions={suggestions} finalText={finalText} />
                 </div>
             </div>

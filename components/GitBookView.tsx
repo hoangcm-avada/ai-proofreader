@@ -241,7 +241,7 @@ const GitBookView: React.FC<GitBookViewProps> = ({ onAnalyzePages, pageStatuses,
                 {/* Column 2: Content Selection */}
                 <div className="lg:col-span-1 space-y-2">
                      <h3 className="font-bold text-white text-lg border-b border-gray-700 pb-2">2. Select Content</h3>
-                     <div className="bg-[#0D0B14] border border-gray-600 rounded-md p-2 h-80 overflow-y-auto">
+                     <div className="bg-[#0D0B14] border border-gray-600 rounded-md p-2 h-60 sm:h-72 md:h-80 overflow-y-auto">
                         {!isConnected ? <p className="text-gray-500 text-center p-4">Connect with your API key to see content.</p> :
                             organizations.map(org => {
                                 const isExpanded = expandedNodes.has(org.id);
@@ -277,9 +277,7 @@ const GitBookView: React.FC<GitBookViewProps> = ({ onAnalyzePages, pageStatuses,
                                                                 checked={selectedPageIds.has(page.id)} onChange={() => handleSelectionChange(page.id, 'page')} />
                                                             <DocumentTextIcon className="w-4 h-4 text-gray-400" />
                                                             <span className="text-sm flex-grow">{page.title}</span>
-                                                            {/* FIX: Replaced title prop with a span wrapper for tooltip, as the component's typings do not accept a 'title' prop. */}
                                                             {status === 'errors' && <span title="Suggestions found in last scan"><InformationCircleIcon className="w-4 h-4 text-purple-400 flex-shrink-0" /></span>}
-                                                            {/* FIX: Replaced title prop with a span wrapper for tooltip, as the component's typings do not accept a 'title' prop. */}
                                                             {status === 'no_issues' && <span title="No issues found in last scan"><CheckCircleIcon className="w-4 h-4 text-green-400 flex-shrink-0" /></span>}
                                                         </div>
                                                     })}
@@ -297,7 +295,7 @@ const GitBookView: React.FC<GitBookViewProps> = ({ onAnalyzePages, pageStatuses,
                 {/* Column 3: Analysis */}
                 <div className="lg:col-span-1 space-y-4">
                      <h3 className="font-bold text-white text-lg border-b border-gray-700 pb-2">3. Analyze</h3>
-                     <div className="bg-[#0D0B14] border border-gray-600 rounded-md p-4 text-center space-y-3 flex flex-col justify-center items-center h-80">
+                     <div className="bg-[#0D0B14] border border-gray-600 rounded-md p-4 text-center space-y-3 flex flex-col justify-center items-center h-60 sm:h-72 md:h-80">
                         <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">
                             {selectedPageIds.size}
                         </div>

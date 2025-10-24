@@ -56,10 +56,10 @@ const SummaryResultsView: React.FC<SummaryResultsViewProps> = ({ result, onBack 
                 </button>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                      <h3 className="font-semibold text-white">Original Document</h3>
-                     <div className="bg-[#0D0B14] p-4 rounded-md border border-gray-600/80 h-96 overflow-y-auto">
+                     <div className="bg-[#0D0B14] p-4 rounded-md border border-gray-600/80 h-64 sm:h-80 md:h-96 overflow-y-auto">
                         <pre className="whitespace-pre-wrap text-sm text-gray-400 font-sans">{result.originalText}</pre>
                     </div>
                 </div>
@@ -77,7 +77,7 @@ const SummaryResultsView: React.FC<SummaryResultsViewProps> = ({ result, onBack 
                             </button>
                         </div>
                     </div>
-                    <div className="bg-[#0D0B14] p-4 rounded-md border border-gray-600/80 h-96 overflow-y-auto">
+                    <div className="bg-[#0D0B14] p-4 rounded-md border border-gray-600/80 h-64 sm:h-80 md:h-96 overflow-y-auto">
                         <pre className="whitespace-pre-wrap text-gray-300 font-sans">{result.summary}</pre>
                     </div>
                 </div>

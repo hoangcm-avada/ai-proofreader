@@ -127,7 +127,7 @@ const FileUploadView: React.FC<FileUploadViewProps> = ({ onAnalyzeFiles, isLoadi
                             id="file-custom-dictionary"
                             value={customDictionary}
                             onChange={(e) => setCustomDictionary(e.target.value)}
-                            className="w-full h-28 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm font-mono text-sm disabled:opacity-50"
+                            className="w-full h-24 sm:h-28 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm font-mono text-sm disabled:opacity-50"
                             placeholder="Prevent the AI from flagging specific words. Enter one term per line. Good for brand names, acronyms, or technical terms (e.g., 'Avada', 'SaaS', 'front-end')."
                             disabled={isLoading}
                         />
@@ -143,7 +143,7 @@ const FileUploadView: React.FC<FileUploadViewProps> = ({ onAnalyzeFiles, isLoadi
                             id="file-style-guide"
                             value={styleGuideRules}
                             onChange={(e) => setStyleGuideRules(e.target.value)}
-                            className="w-full h-28 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm font-mono text-sm disabled:opacity-50"
+                            className="w-full h-24 sm:h-28 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm font-mono text-sm disabled:opacity-50"
                             placeholder="Enforce custom writing rules. Enter one rule per line. The AI will follow these instructions (e.g., 'Always use &quot;customer&quot; instead of &quot;user&quot;', 'Write in a formal tone')."
                             disabled={isLoading}
                         />

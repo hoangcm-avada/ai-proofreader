@@ -70,7 +70,7 @@ const TextInputView: React.FC<TextInputViewProps> = ({
                         id="markdown-input"
                         value={markdownText}
                         onChange={(e) => setMarkdownText(e.target.value)}
-                        className="w-full h-64 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150 ease-in-out font-mono text-sm text-gray-300 placeholder-gray-500 disabled:opacity-50"
+                        className="w-full h-40 sm:h-64 p-3 bg-[#0D0B14] border border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150 ease-in-out font-mono text-sm text-gray-300 placeholder-gray-500 disabled:opacity-50"
                         placeholder="Enter your Markdown content here..."
                         disabled={isLoading || isGenerating}
                     />
